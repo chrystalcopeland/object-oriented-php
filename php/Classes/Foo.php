@@ -1,4 +1,9 @@
 <?php
+
+namespace Edu\Cnm\DataDesing;
+require_once(dirname(__DIR__,2) . "/vendor/autoload.php");
+use Ramsey\Uuid\Uuid;
+
 /** Author Site Management */
 
 class Profile implements \JsonSerializable {
@@ -120,51 +125,67 @@ class Profile implements \JsonSerializable {
 	/**
 	 * mutator method for Author Activation Token
 	 *
-	 * @param Uuid|string $newAuthorActivationToken new value of Author id
-	 * @throws \UnexpectedValueException if $newAuthorActivationToken is not an intiger
-	 * @throws \TypeError if $newAuthorId is not a uuid or string
-	 **/
-	public function setAuthorId($newAuthorActivationToken) {
-		$newAuthorId = filter_var($newAuthorActivationToken, FILTER_VALIDATE_INT)
-			if($newAuthorId === false){
-				throw (new UnexpectedValueException("author id is not a valid integer" ));
+	 * @param string $newAuthorActivationToken
+	 * @throws \HttpInvalidParamException if the token is not a string or insecure
+	 * @throws \RangeException if the token is not exactly 32 characters
+	 * @throws \TypeError if the activation token is not a string
+	 */
+	public function setAuthorActivationToken(?string $newAuthorActivationToken): void {
+		if($newProfileActivationToken === null) {
+			$this->profileActivationToken = null;
+		}
+	}
+		$newAuthorActivationToken = strtolower (trim($newAuthorActivationToken));
+			if($ctype_xdigit ($newAuthorActivationToken) === false){
+				throw (new\RangeException("author activation is not valid" ));
 			}
 }
-	// convert and store the Author id
-	$this->authorActivationToken = inval($newAuthorActivationToken);
+	// make sure user activation token is only 32 characters
+	if(strlen($newAuthorActivationToken) !==32){
+	throw(new\RangeException("user activation token has to be 32"));
+		}
+		this->AuthorActivationToken = $newAuthorActivationToken;
+}
 	/**
 	 * accessor method for author email
-	 */
-	public function getAuthorEmail (){
-		return ($this->AuthorEmail);
+	 * @return string value of email
+	 **/
+	public function getAuthorEmail():string {
+		return $this->AuthorEmail;
 	}
 	/**
 	 * mutator method for author email
 	 *
-	 * @param Uuid|string $newAuthorEmail new value of Author email
-	 * @throws \UnexpectedValueException if $newAuthorId is not an intiger
-	 * @throws \TypeError if $newAuthorEmail is not a uuid or string
+	 * @param string $newAuthorEmail new value of Author email
+	 * @throws \InvalidArgumentException if $newAuthorEmail is not a valid email or insecure
+	 * @throws \RangeException if $newAuthorEmail is > 128 characters
+	 * @throws \TypeError if $newEmail is not a string
 	 **/
-	public function setAuthorEmail($newAuthorEmail) {
-		$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_INT)
-			if($newAuthorEmail === false){
-				throw (new UnexpectedValueException("email is is not a valid" ));
+	public function setAuthorEmail(string $newAuthorEmail): void {
+
+		//verify email is secure
+		$newAuthorEmail = trim($newAuthorEmail);
+		$newProfileEmail = filter_var (FILTER_VALIDATE_EMAIL);
+			if(empty($newAuthorEmail) === true){
+				throw (new \InvalidArgumentException ("author email is is not a valid" ));
 			}
 }
-	// convert and store the Author id
-	$this->authorId = inval($newAuthorId);
+	// store the email
+	$this->authorEmail = $newAuthorEmail;
 	/**
 	 * accessor method for author hash
+	 * @return string value of hash
 	 */
-	public function getAuthorHash () {
-		return ($this->AuthorHash);
+	public function getAuthorHash(): {
+		return $this->AuthorHash;
 	}
 	/**
-	 * mutator method for author hash
+	 * mutator method for author hash password
 	 *
-	 * @param Uuid|string $newAuthorId new value of Author hash
-	 * @throws \UnexpectedValueException if $newAuthorHash is not an intiger
-	 * @throws \TypeError if $newAuthorId is not a uuid or string
+	 * @param string $newAuthorHash
+	 * @throws \InvalidArgumentException if has is not secure
+	 * @throws \RangeExcpeption if the has is not 97 characters
+	 * @throws \TypeError if $newAuthorHash is not a string
 	 **/
 	public function setAuthorHash($newAuthorHash) {
 		$newAuthorHash = filter_var($newAuthorHash, FILTER_VALIDATE_INT)
