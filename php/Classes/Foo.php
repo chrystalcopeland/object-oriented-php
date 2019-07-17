@@ -1,10 +1,10 @@
 <?php
 /** Author Site Management */
 
-class Author (
+class Author implements \ {
 	/**
- 	* Id for this profile - this is the Primary Key
- 	*/
+	 * Id for this profile - this is the Primary Key
+	 */
 	private $authorId;
 	/**
 	 *  Avatar for Author
@@ -25,13 +25,13 @@ class Author (
 	/**
 	 * author User Name
 	 */
-	private $authorUsername
-)
+	private $authorUsername;
+}
 	/**
 	 * constructor for this Post
 	 *
 	 * @param string|Uuid $newAuthorId id of this author or Null if new author
-	 * @param string|Null $newAvatarID avator of this author
+	 * @param string|Null $newAvatarId avator of this author
 	 * @param string $authorActivationToken string actual URL
 	 * @param string |Null $authorEmail string email address for this author
 	 * @param string $authorHash string authors hash for this author
@@ -41,45 +41,105 @@ class Author (
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
+	public function __construct($newAuthorId, $newAvatarId, $newAuthorActivationToken, $newAuthorEmail, $newAuthorHash,
+										 $newAuthorUsername) {
+	try {
+		$this->setAuthorId($newAuthorId);
+		$this->setAvatarId($newAvatarId);
+		$this->setauthorActivationToken($newAuthorActivationToken);
+		$this->setAuthorEmail($newAuthorEmail);
+		$this->setAuthorHash ($newAuthorHash);
+		$this->setAuthorUsername ($newAuthorUsername);
+	}
+		//determine what exception type was thrown
+	catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		$exceptionType = get_class($exception);
+		{
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+	}
 	/**
 	 * accessor method for obtaining new author id
 	 */
 	public function getAuthorId () {
-	 	return (this->AuthorID);
+	 	return ($this->AuthorID);
 	}
+	/**
+	 * mutator method for author id
+	 *
+	 * @param Uuid|string $newAuthorId new value of Author id
+	 * @throws \UnexpectedValueException if $newAuthorId is not an intiger
+	 * @throws \TypeError if $newAuthorId is not a uuid or string
+	 **/
+	public function setAuthorId($newAuthorId) {
+		$newAuthorId = filter_var($newAuthorIdeId, FILTER_VALIDATE_INT)
+			if($newAuthorId === false){
+				throw (new UnexpectedValueException("author id is not a valid integer" ));
+			}
+}
+	// convert and store the Author id
+	$this->authorId = inval($newAuthorId);
 	/**
 	 * accessor method for obtaining author avatar id
 	 */
 	public function getAuthorAvatar (){
-		return ($this->authorID)
+		return ($this->authorID);
 	}
+	/**
+	 * mutator method for author avatar
+	 *
+	 * @param Uuid|string $newAuthorId new value of Author id
+	 * @throws \UnexpectedValueException if $newAuthorId is not an intiger
+	 * @throws \TypeError if $newAuthorId is not a uuid or string
+	 **/
+	public function setAuthorId($newAuthorId) {
+		$newAuthorId = filter_var($newAuthorIdeId, FILTER_VALIDATE_INT)
+			if($newAuthorId === false){
+				throw (new UnexpectedValueException("author id is not a valid integer" ));
+			}
+}
+	// convert and store the Author id
+	$this->authorId = inval($newAuthorId);
 	/**
 	 * accessor method for Author Activation Token
 	 */
 	public function getAuthorAvatarUrl (){
-		return (this->AuthorAvatarUrl)
+		return ($this->AuthorAvatarUrl);
 	}
 	/**
 	 * accessor method for author email
 	 */
 	public function getAuthorEmail (){
-		return (this->AuthorEmail)
+		return ($this->AuthorEmail);
 	}
 	/**
-	 * accessor method for
+	 * accessor method for author hash
 	 */
+	public function getAuthorHash () {
+		return ($this->AuthorHash);
+	}
+	/**
+ 	* accessor method for author Username
+ 	*/
+	public function getAuthorUsername () {
+		return ($this->AuthorUsername);
+	}
 
 
-/**
- * mutator method for profile id
- *
- * @param  Uuid| string $newProfileId value of new profile id
- * @throws \RangeException if $newProfileId is not positive
- * @throws \TypeError if the profile Id is not
- **/
-	public function setProfileId( $newProfileId): void {
-	try {
-		$uuid = self::validateUuid($newProfileId);
-	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-		$exceptionType = get_class($exception);
-		throw(new $exceptionType($exception->getMessage(), 0, $exception));
+	/**
+	 * mutator method for author avatar
+	 *
+	 * @param Uuid|string $newAuthorId new value of Author id
+	 * @throws \UnexpectedValueException if $newAuthorId is not an intiger
+	 * @throws \TypeError if $newAuthorId is not a uuid or string
+	 **/
+	public function setAuthorId($newAuthorId) {
+		$newAuthorId = filter_var($newAuthorIdeId, FILTER_VALIDATE_INT)
+			if($newAuthorId === false){
+				throw (new UnexpectedValueException("author id is not a valid integer" ));
+			}
+}
+	// convert and store the Author id
+	$this->authorId = inval($newAuthorId);
+
+}
