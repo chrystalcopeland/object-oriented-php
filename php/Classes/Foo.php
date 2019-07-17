@@ -1,29 +1,36 @@
 <?php
 /** Author Site Management */
 
-class Author implements \ {
+class Profile implements \JsonSerializable {
+	use ValidateUuid;
 	/**
-	 * Id for this profile - this is the Primary Key
+	 * Id for this author - this is the Primary Key
+	 * @var Uuid $authorId
 	 */
 	private $authorId;
-	/**
-	 *  Avatar for Author
+	/*
+	*Cloudinary id for this author; this is a unique index
+	 * @var string $profileEmail
 	 */
 	private $authorAvatarUrl;
 	/**
-	 * author activation token
+	 * token handed out to verify that the author is valid and not malicious.
+	 * @var $profileActivationToken
 	 */
 	private $authorActivationToken;
 	/**
-	 * author email
+	 * email for this Author; this is a unique index
+	 * @var $authorEmail
 	 */
 	private $authorEmail;
 	/**
-	 * author hash
+	 * hash for author password
+	 * @var $authorHash
 	 */
 	private $authorHash;
 	/**
-	 * author User Name
+	 * username for this author; this is a unique index
+	 * @var $authorUsername
 	 */
 	private $authorUsername;
 }
@@ -61,51 +68,70 @@ class Author implements \ {
 	/**
 	 * accessor method for obtaining new author id
 	 */
-	public function getAuthorId () {
+	public function getAuthorId(): Uuid {
 	 	return ($this->AuthorID);
 	}
 	/**
 	 * mutator method for author id
 	 *
 	 * @param Uuid|string $newAuthorId new value of Author id
-	 * @throws \UnexpectedValueException if $newAuthorId is not an intiger
+	 * @throws \RangeException if $newAuthorId is not positive
 	 * @throws \TypeError if $newAuthorId is not a uuid or string
 	 **/
 	public function setAuthorId($newAuthorId) {
-		$newAuthorId = filter_var($newAuthorIdeId, FILTER_VALIDATE_INT)
+		$newAuthorId = filter_var($newAuthorId, FILTER_VALIDATE_INT)
 			if($newAuthorId === false){
 				throw (new UnexpectedValueException("author id is not a valid integer" ));
 			}
 }
 	// convert and store the Author id
-	$this->authorId = inval($newAuthorId);
+	$this->authorId = $uuid;
 	/**
-	 * accessor method for obtaining author avatar id
+	 * accessor method for obtaining author avatar url
+	 * @return string value of the activation token
 	 */
-	public function getAuthorAvatar (){
-		return ($this->authorID);
+	public function getAuthorAvatarURL() : string {
+		return($this->authorAvatarUrl);
 	}
 	/**
 	 * mutator method for author avatar
 	 *
-	 * @param Uuid|string $newAuthorId new value of Author id
-	 * @throws \UnexpectedValueException if $newAuthorId is not an intiger
+	 * @param string $newAuthorAvatarId new value of Author id url
+	 * @throws \HttpInvalidParamException if $newAuthorAvatarId is not a string or insecure
+	 * @throws \TypeError if $newAuthorAvatarId is not a string
+	 **/
+	public function setAuthorAvator(string $newAuthorAvatarId) :void {
+		$newAuthorAvatarId = trim($newAuthorAvatarId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
+
+			//verify the avatar will fit in the database
+			if(strln($newAuthorAvatarId) > 225){
+				throw (new /RangeException ("image cloudinary content too large" ));
+			}
+}
+	// store the image cloudinary content
+	$this->authorAvatarUrl = inval($newAuthorAvatarUrl);
+	/**
+	 * accessor method for Author Activation Token
+	 * @return string value of the activation token
+	 */
+	public function getAuthorActivationToken () : ?string {
+		return ($this->AuthorActivationToken);
+	}
+	/**
+	 * mutator method for Author Activation Token
+	 *
+	 * @param Uuid|string $newAuthorActivationToken new value of Author id
+	 * @throws \UnexpectedValueException if $newAuthorActivationToken is not an intiger
 	 * @throws \TypeError if $newAuthorId is not a uuid or string
 	 **/
-	public function setAuthorId($newAuthorId) {
-		$newAuthorId = filter_var($newAuthorIdeId, FILTER_VALIDATE_INT)
+	public function setAuthorId($newAuthorActivationToken) {
+		$newAuthorId = filter_var($newAuthorActivationToken, FILTER_VALIDATE_INT)
 			if($newAuthorId === false){
 				throw (new UnexpectedValueException("author id is not a valid integer" ));
 			}
 }
 	// convert and store the Author id
-	$this->authorId = inval($newAuthorId);
-	/**
-	 * accessor method for Author Activation Token
-	 */
-	public function getAuthorAvatarUrl (){
-		return ($this->AuthorAvatarUrl);
-	}
+	$this->authorActivationToken = inval($newAuthorActivationToken);
 	/**
 	 * accessor method for author email
 	 */
@@ -113,33 +139,60 @@ class Author implements \ {
 		return ($this->AuthorEmail);
 	}
 	/**
+	 * mutator method for author email
+	 *
+	 * @param Uuid|string $newAuthorEmail new value of Author email
+	 * @throws \UnexpectedValueException if $newAuthorId is not an intiger
+	 * @throws \TypeError if $newAuthorEmail is not a uuid or string
+	 **/
+	public function setAuthorEmail($newAuthorEmail) {
+		$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_INT)
+			if($newAuthorEmail === false){
+				throw (new UnexpectedValueException("email is is not a valid" ));
+			}
+}
+	// convert and store the Author id
+	$this->authorId = inval($newAuthorId);
+	/**
 	 * accessor method for author hash
 	 */
 	public function getAuthorHash () {
 		return ($this->AuthorHash);
 	}
 	/**
+	 * mutator method for author hash
+	 *
+	 * @param Uuid|string $newAuthorId new value of Author hash
+	 * @throws \UnexpectedValueException if $newAuthorHash is not an intiger
+	 * @throws \TypeError if $newAuthorId is not a uuid or string
+	 **/
+	public function setAuthorHash($newAuthorHash) {
+		$newAuthorHash = filter_var($newAuthorHash, FILTER_VALIDATE_INT)
+			if($newAuthorHash === false){
+				throw (new UnexpectedValueException("author hash is not a valid integer" ));
+			}
+}
+	// convert and store the Author id
+	$this->authorHash = inval($newAuthorHash);
+	/**
  	* accessor method for author Username
  	*/
 	public function getAuthorUsername () {
 		return ($this->AuthorUsername);
 	}
-
-
 	/**
-	 * mutator method for author avatar
+	 * mutator method for author Username
 	 *
-	 * @param Uuid|string $newAuthorId new value of Author id
-	 * @throws \UnexpectedValueException if $newAuthorId is not an intiger
+	 * @param Uuid|string $newAuthorUsername new value of Author id
+	 * @throws \UnexpectedValueException if $newAuthorId is not an string
 	 * @throws \TypeError if $newAuthorId is not a uuid or string
 	 **/
-	public function setAuthorId($newAuthorId) {
-		$newAuthorId = filter_var($newAuthorIdeId, FILTER_VALIDATE_INT)
-			if($newAuthorId === false){
-				throw (new UnexpectedValueException("author id is not a valid integer" ));
+	public function setAuthorUsername($newAuthorUsername) {
+		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_VALIDATE_INT)
+			if($newAuthorUsername === false){
+				throw (new UnexpectedValueException("author username is not a valid integer" ));
 			}
 }
 	// convert and store the Author id
-	$this->authorId = inval($newAuthorId);
+	$this->authorUsername = inval($newAuthorUsername);
 
-}
