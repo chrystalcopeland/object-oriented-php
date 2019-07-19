@@ -102,7 +102,7 @@ class Author implements \JsonSerializable {
 	 * accessor method for obtaining author avatar url
 	 * @return string value of the activation token
 	 */
-	public function getAuthorAvatarURL(): string {
+	public function getAuthorAvatarURL() {
 		return ($this->authorAvatarUrl);
 	}
 
@@ -111,7 +111,7 @@ class Author implements \JsonSerializable {
 	 *
 	 * @param string $newAuthorAvatarUrl new value of Author Avatar url
 	 * @throws \InvalidArguemtnException if $newAuthorAvatarUrl is not a string or insecure
-	 * @throws /\RangeException if $newAuthorAvatarId is > 255 characters
+	 * @throws \RangeException if $newAuthorAvatarId is > 255 characters
 	 * @throws \TypeError if $newAuthorAvatarId is not a string
 	 **/
 	public function setAuthorAvatorUrl(?string $newAuthorAvatarUrl): void {
@@ -123,9 +123,10 @@ class Author implements \JsonSerializable {
 		if(strln($newAuthorAvatarUrl) > 225) {
 			throw (new \RangeException ("image cloudinary content too large"));
 		}
+		// store the image cloudinary content
+		$this->authorAvatarUrl = inval($newAuthorAvatarUrl);
 	}
-	// store the image cloudinary content
-$this->authorAvatarUrl = inval($newAuthorAvatarUrl);
+
 	/**
 	 * accessor method for Author Activation Token
 	 * @return string value of the activation token
@@ -156,7 +157,7 @@ $this->authorAvatarUrl = inval($newAuthorAvatarUrl);
 			throw(new\RangeException("user activation token has to be 32 characters"));
 		}
 		this->AuthorActivationToken = $newAuthorActivationToken;
-		}
+	}
 
 	/**
 	 * accessor method for author email
