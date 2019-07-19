@@ -1,6 +1,6 @@
 <?php
 
-namespace Edu\Cnm\DataDesing;
+namespace Edu\Cnm\canderson73\ObjectOrient;
 require_once(dirname(__DIR__,2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
@@ -38,7 +38,7 @@ class Profile implements \JsonSerializable {
 	 * @var $authorUsername
 	 */
 	private $authorUsername;
-}
+
 	/**
 	 * constructor for this Post
 	 *
@@ -53,11 +53,11 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
-	public function __construct($newAuthorId, $newAvatarId, $newAuthorActivationToken, $newAuthorEmail, $newAuthorHash,
-										 $newAuthorUsername) {
+	public function __construct($newAuthorId, string $newAvatarUrl, string $newAuthorActivationToken, string $newAuthorEmail,
+										 string $newAuthorHash, string $newAuthorUsername) {
 	try {
 		$this->setAuthorId($newAuthorId);
-		$this->setAvatarId($newAvatarId);
+		$this->setAvatarUrl($newAvatarUrl);
 		$this->setauthorActivationToken($newAuthorActivationToken);
 		$this->setAuthorEmail($newAuthorEmail);
 		$this->setAuthorHash ($newAuthorHash);
@@ -69,11 +69,11 @@ class Profile implements \JsonSerializable {
 		{
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-	}
+	}}
 	/**
 	 * accessor method for obtaining new author id
 	 */
-	public function getAuthorId(): Uuid {
+	public function getAuthorId(): Uuid{
 	 	return ($this->AuthorID);
 	}
 	/**
@@ -83,10 +83,12 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeException if $newAuthorId is not positive
 	 * @throws \TypeError if $newAuthorId is not a uuid or string
 	 **/
-	public function setAuthorId($newAuthorId) {
-		$newAuthorId = filter_var($newAuthorId, FILTER_VALIDATE_INT)
-			if($newAuthorId === false){
-				throw (new UnexpectedValueException("author id is not a valid integer" ));
+	public function setAuthorId($newAuthorId) : void {
+		try {
+				$uuid = self::validateUuid($newAuthorId);
+				catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+					$exceptionType = get_class($exception);
+					throw(new $exceptionType($exception->getMessage(); 0, $exception));
 			}
 }
 	// convert and store the Author id
@@ -101,16 +103,18 @@ class Profile implements \JsonSerializable {
 	/**
 	 * mutator method for author avatar
 	 *
-	 * @param string $newAuthorAvatarId new value of Author id url
+	 * @param string $newAuthorAvatarUrl new value of Author id url
 	 * @throws \HttpInvalidParamException if $newAuthorAvatarId is not a string or insecure
 	 * @throws \TypeError if $newAuthorAvatarId is not a string
 	 **/
-	public function setAuthorAvator(string $newAuthorAvatarId) :void {
-		$newAuthorAvatarId = trim($newAuthorAvatarId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
+	public function setAuthorAvator(string $newAuthorAvatarUrl) :void {
+
+		$newAuthorAvatarUrl = trim($newAuthorAvatarUrl);
+		FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 			//verify the avatar will fit in the database
-			if(strln($newAuthorAvatarId) > 225){
-				throw (new /RangeException ("image cloudinary content too large" ));
+			if(strln($newAuthorAvatarUrl) > 225){
+				throw (new \RangeException ("image cloudinary content too large" ));
 			}
 }
 	// store the image cloudinary content
@@ -126,15 +130,15 @@ class Profile implements \JsonSerializable {
 	 * mutator method for Author Activation Token
 	 *
 	 * @param string $newAuthorActivationToken
-	 * @throws \HttpInvalidParamException if the token is not a string or insecure
+	 * @throws \InvalidArgumentException if the token is not a string or insecure
 	 * @throws \RangeException if the token is not exactly 32 characters
 	 * @throws \TypeError if the activation token is not a string
 	 */
 	public function setAuthorActivationToken(?string $newAuthorActivationToken): void {
 		if($newProfileActivationToken === null) {
 			$this->profileActivationToken = null;
+			return;
 		}
-	}
 		$newAuthorActivationToken = strtolower (trim($newAuthorActivationToken));
 			if($ctype_xdigit ($newAuthorActivationToken) === false){
 				throw (new\RangeException("author activation is not valid" ));
@@ -176,7 +180,7 @@ class Profile implements \JsonSerializable {
 	 * accessor method for author hash
 	 * @return string value of hash
 	 */
-	public function getAuthorHash(): {
+	public function getAuthorHash(): string {
 		return $this->AuthorHash;
 	}
 	/**
@@ -187,14 +191,19 @@ class Profile implements \JsonSerializable {
 	 * @throws \RangeExcpeption if the has is not 97 characters
 	 * @throws \TypeError if $newAuthorHash is not a string
 	 **/
-	public function setAuthorHash($newAuthorHash) {
-		$newAuthorHash = filter_var($newAuthorHash, FILTER_VALIDATE_INT)
-			if($newAuthorHash === false){
-				throw (new UnexpectedValueException("author hash is not a valid integer" ));
+	public function setAuthorHash(string $newAuthorHash): void {
+
+		//enforce that the hash is properly formatted
+		$newAuthorHash = trim($newAuthorHash);
+		if(empty($newAuthorHash)===true);
+				throw (new \InvalidArgumentException("author password is not a valid hash" ));
 			}
-}
-	// convert and store the Author id
-	$this->authorHash = inval($newAuthorHash);
+		//enforce that the hash is exactly 97 characters
+		if(strlen($newAuthorHash) !===97) {
+			throw(new \RangeException("profile has must be 97 characters"));
+		}
+		// convert and store the Author Hash
+		$this->authorHash = $newAuthorHash;
 	/**
  	* accessor method for author Username
  	*/
@@ -204,12 +213,13 @@ class Profile implements \JsonSerializable {
 	/**
 	 * mutator method for author Username
 	 *
-	 * @param Uuid|string $newAuthorUsername new value of Author id
-	 * @throws \UnexpectedValueException if $newAuthorId is not an string
-	 * @throws \TypeError if $newAuthorId is not a uuid or string
+	 * @param string $newAuthorUsername
+	 * @throws range exception if UserName is more than 32 characters
+	 *
 	 **/
-	public function setAuthorUsername($newAuthorUsername) {
-		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_VALIDATE_INT)
+	public function setAuthorUsername(?string $newAuthorUsername) (
+		//verify the profile Id is valid
+		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_VALIDATE_INT);
 			if($newAuthorUsername === false){
 				throw (new UnexpectedValueException("author username is not a valid integer" ));
 			}
