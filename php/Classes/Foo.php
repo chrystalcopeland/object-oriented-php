@@ -156,7 +156,7 @@ class Author implements \JsonSerializable {
 		if(strlen($newAuthorActivationToken) === false) {
 			throw(new\RangeException("user activation token has to be 32 characters"));
 		}
-		this->AuthorActivationToken = $newAuthorActivationToken;
+		$this->authorActivationToken = $newAuthorActivationToken;
 	}
 
 	/**
@@ -182,9 +182,9 @@ class Author implements \JsonSerializable {
 		if(empty($newAuthorEmail) === true) {
 			throw (new \InvalidArgumentException ("author email is is not a valid"));
 		}
+		// store the email
+		$this->authorEmail = $newAuthorEmail;
 	}
-	// store the email
-$this->authorEmail = $newAuthorEmail;
 	/**
 	 * accessor method for author hash
 	 * @return string value of hash
@@ -209,12 +209,12 @@ $this->authorEmail = $newAuthorEmail;
 			throw (new \InvalidArgumentException("author password is not a valid hash"));
 		}
 		//enforece that this has is really an Argon Hash
-		$authorHashInfor = password_get_info($newAuthorHash);
+		$authorHashInfo = password_get_info($newAuthorHash);
 		if($authorHashInfo["algoName"] !== "argon2i") {
 			throw(new \InvalidArgumentException("hash is not a valid hash"));
 		}
 		//enforce that the hash is exactly 97 characters
-		if(strlen($newAuthorHash) !===97) {
+		if(strlen($newAuthorHash) !== 97) {
 			throw(new \RangeException("profile hash must be 97 characters"));
 		}
 		// convert and store the Author Hash
@@ -235,12 +235,12 @@ $this->authorEmail = $newAuthorEmail;
 	 * @throws range exception if UserName is more than 32 characters
 	 *
 	 **/
-	public function setAuthorUsername(string $newAuthorUsername): void {
+	public function setAuthorUsername($newAuthorUsername): string {
 		//verify the profile Id is valid
-		$newAuthorUsername - trim($newAuthorUsername);
-		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty$newAuthorUsername === true) {
-			throw (new InvalidArgumentException("author username is not a valid integer"));
+		$newAuthorUsername = trim($newAuthorUsername);
+		if($newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING));
+		if($newAuthorUsername === false) {
+			throw (new \InvalidArgumentException("author username is not a valid string"));
 		}
 		//verify the suername will fit in the database
 		if(strlen($newAuthorUsername) > 32) {
