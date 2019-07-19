@@ -1,3 +1,8 @@
+Alter DATABASE canderson73 CHARACTER SET utf8_unicode_ci;
+
+DROP TABLE IF EXISTS author;
+
+
 create table author(
 	authorId binary(16) not null,
 	authorAvatarUrl varchar(255),

@@ -1,4 +1,3 @@
-namespace Edu\Cnm\canderson73\ObjectOrient;
 <?php
 /**
  * PSR-4 Compliant Autoloader
