@@ -6,7 +6,7 @@ use Ramsey\Uuid\Uuid;
 
 /** Author Site Management */
 
-class Profile implements \JsonSerializable {
+class Author implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 * Id for this author - this is the Primary Key
@@ -142,13 +142,13 @@ class Profile implements \JsonSerializable {
 			if($ctype_xdigit ($newAuthorActivationToken) === false){
 				throw (new\RangeException("author activation is not valid" ));
 			}
-}
+	}
 	// make sure user activation token is only 32 characters
 	if(strlen($newAuthorActivationToken) !==32){
 	throw(new\RangeException("user activation token has to be 32"));
 		}
 		this->AuthorActivationToken = $newAuthorActivationToken;
-}
+		}
 	/**
 	 * accessor method for author email
 	 * @return string value of email
@@ -172,7 +172,7 @@ class Profile implements \JsonSerializable {
 			if(empty($newAuthorEmail) === true){
 				throw (new \InvalidArgumentException ("author email is is not a valid" ));
 			}
-}
+	}
 	// store the email
 	$this->authorEmail = $newAuthorEmail;
 	/**
@@ -222,7 +222,14 @@ class Profile implements \JsonSerializable {
 			if($newAuthorUsername === false){
 				throw (new UnexpectedValueException("author username is not a valid integer" ));
 			}
-}
-	// convert and store the Author id
-	$this->authorUsername = inval($newAuthorUsername);
 
+
+	// convert and store the Author Username
+	$this->authorUsername = $newAuthorUsername;
+	}
+	public function jsonSerialize () : array {
+	$fields = get_object_vars($this);
+	$fields ["authorId"] = $this->authorId->toString();
+
+	return($fields);
+}

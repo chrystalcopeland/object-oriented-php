@@ -4,6 +4,6 @@ namespace
 
 require_once(*../Classes/bar.php*);
 
-$foo = new bar();
+$foo = new Author,();
 
 var_dump($foo);
