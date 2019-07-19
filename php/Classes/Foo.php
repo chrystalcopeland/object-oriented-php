@@ -84,13 +84,12 @@ class Profile implements \JsonSerializable {
 	 * @throws \TypeError if $newAuthorId is not a uuid or string
 	 **/
 	public function setAuthorId($newAuthorId) : void {
-		try {
+		try{
 				$uuid = self::validateUuid($newAuthorId);
-				catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+				catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError (exception){
 					$exceptionType = get_class($exception);
 					throw(new $exceptionType($exception->getMessage(); 0, $exception));
 			}
-}
 	// convert and store the Author id
 	$this->authorId = $uuid;
 	/**
