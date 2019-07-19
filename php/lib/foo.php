@@ -1,9 +1,9 @@
 <?php
 
-namespace
+namespace Canderson73\ObjectOriented;
 
-require_once(*../Classes/bar.php*);
+require_once("../Classes/foo.php");
 
-$foo = new Author,();
+$author = new Author();
 
-var_dump($foo);
+var_dump($author);
