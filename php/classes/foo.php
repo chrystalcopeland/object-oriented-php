@@ -1,9 +1,10 @@
 <?php
 
-namespace Edu\Cnm\canderson73\ObjectOrient;
-require_once(dirname(__DIR__,2) . "/vendor/autoload.php");
+namespace Canderson73\ObjectOriented;
 
-use http\Exception\InvalidArgumentException;
+require_once ("autoload.php");
+require_once(dirname(__DIR__,1) . "/vendor/autoload.php");
+
 use Ramsey\Uuid\Uuid;
 
 /** Author Site Management */
@@ -55,21 +56,24 @@ class Author implements \JsonSerializable {
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
+
 	public function __construct($newAuthorId, string $newAuthorAvatarUrl, string $newAuthorActivationToken, string $newAuthorEmail,
 										 string $newAuthorHash, string $newAuthorUsername) {
+
 		try {
 			$this->setAuthorId($newAuthorId);
-			$this->setAuthorAvatarUrl($newAuthorAvatarUrl);
+			$this->setAuthorAvatorUrl($newAuthorAvatarUrl);
 			$this->setAuthorActivationToken($newAuthorActivationToken);
 			$this->setAuthorEmail($newAuthorEmail);
 			$this->setAuthorHash($newAuthorHash);
 			$this->setAuthorUsername($newAuthorUsername);
-		} //determine what exception type was thrown
+
+		}
+		//determine what exception type was thrown
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
-			{
 				throw(new $exceptionType($exception->getMessage(), 0, $exception));
-			}
+
 		}
 	}
 
@@ -77,7 +81,7 @@ class Author implements \JsonSerializable {
 	 * accessor method for obtaining new author id
 	 */
 	public function getAuthorId(): Uuid {
-		return ($this->AuthorID);
+		return ($this->authorId);
 	}
 
 	/**
@@ -102,7 +106,7 @@ class Author implements \JsonSerializable {
 	 * accessor method for obtaining author avatar url
 	 * @return string value of the activation token
 	 */
-	public function getAuthorAvatarURL() {
+	public function getAuthorAvatarUrl() {
 		return ($this->authorAvatarUrl);
 	}
 
@@ -114,17 +118,17 @@ class Author implements \JsonSerializable {
 	 * @throws \RangeException if $newAuthorAvatarId is > 255 characters
 	 * @throws \TypeError if $newAuthorAvatarId is not a string
 	 **/
-	public function setAuthorAvatorUrl(?string $newAuthorAvatarUrl): void {
+	public function setAuthorAvatorUrl(string $newAuthorAvatarUrl): void {
 
 		$newAuthorAvatarUrl = trim($newAuthorAvatarUrl);
 		$newAuthorAvatarUrl = filter_var($newAuthorAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 		//verify the avatar will fit in the database
-		if(strln($newAuthorAvatarUrl) > 225) {
+		if(strlen($newAuthorAvatarUrl) > 225) {
 			throw (new \RangeException ("image cloudinary content too large"));
 		}
 		// store the image cloudinary content
-		$this->authorAvatarUrl = inval($newAuthorAvatarUrl);
+		$this->authorAvatarUrl = $newAuthorAvatarUrl;
 	}
 
 	/**
