@@ -2,13 +2,12 @@
 
 namespace Canderson73\ObjectOriented;
 
-require_once ("autoload.php");
-require_once(dirname(__DIR__,1) . "/vendor/autoload.php");
+require_once("autoload.php");
+require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 
 /** Author Site Management */
-
 class Author implements \JsonSerializable {
 	use ValidateUuid;
 	/**
@@ -68,11 +67,10 @@ class Author implements \JsonSerializable {
 			$this->setAuthorHash($newAuthorHash);
 			$this->setAuthorUsername($newAuthorUsername);
 
-		}
-		//determine what exception type was thrown
+		} //determine what exception type was thrown
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
-				throw(new $exceptionType($exception->getMessage(), 0, $exception));
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 
 		}
 	}
@@ -189,6 +187,7 @@ class Author implements \JsonSerializable {
 		// store the email
 		$this->authorEmail = $newAuthorEmail;
 	}
+
 	/**
 	 * accessor method for author hash
 	 * @return string value of hash
@@ -253,40 +252,40 @@ class Author implements \JsonSerializable {
 		$this->authorUsername = $newAuthorUsername;
 	}
 
-	public function jsonSerialize () : array {
+	public function jsonSerialize(): array {
 		$fields = get_object_vars($this);
 		$fields ["authorId"] = $this->authorId->toString();
 
 		return ($fields);
 	}
-/**
- * Write these in the Author.php file.
-Write and Document an insert statement method
-Write and Document an update statement method
-Write and Document a delete statement method.
-Write and document a getFooByBar method that returns a single object
-Write and document a getFooByBar method that returns a full array
- */
+	/**
+	 * Write these in the Author.php file.
+	 * Write and Document an insert statement method
+	 * Write and Document an update statement method
+	 * Write and Document a delete statement method.
+	 * Write and document a getFooByBar method that returns a single object
+	 * Write and document a getFooByBar method that returns a full array
+	 */
 
 
-/**
- * Inserts this Author into mySQL
- *
- * @param \PDO $pdo PDO connection object
- * @throws \PDOException when mySQL related erros occur
- * @throws \TypeError id $pdo is not a PDO connection object
- */
-public function insert(\PDO $pdo): void {
+	/**
+	 * Inserts this Author into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related erros occur
+	 * @throws \TypeError id $pdo is not a PDO connection object
+	 */
+	public function insert(\PDO $pdo): void {
 
-	// create query template
-	$query = "INSERT INTO author(authorId, authorAvatarUrl, authorActivationToken, authorEmail, authorHash, authorUsername)
+		// create query template
+		$query = "INSERT INTO author(authorId, authorAvatarUrl, authorActivationToken, authorEmail, authorHash, authorUsername)
 	VALUES(:authorId, :authorAvatarUrl, :authorActivationToken, :authorEmail, :authorHash, :authorUsername)";
-	$statement = $pdo->prepare($query);
+		$statement = $pdo->prepare($query);
 
-	$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationToken" => $this->authorActivationToken,
-		"authorAvatarUrl" => $this->authorAvatarUrl, "authorEmail" => $this->authorEmail, "authorHash" => $this->authorHash,
-		"authorUsername" => $this->authorUsername];
-}
+		$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationToken" => $this->authorActivationToken,
+			"authorAvatarUrl" => $this->authorAvatarUrl, "authorEmail" => $this->authorEmail, "authorHash" => $this->authorHash,
+			"authorUsername" => $this->authorUsername];
+	}
 
 	/**
 	 * Updates this Author from mySQL
@@ -298,16 +297,17 @@ public function insert(\PDO $pdo): void {
 	public function update(\PDO $pdo): void {
 
 		//create query template
-		$query ="UPDATE author SET authorActivationToken = :authorActivationToken, authorUsername =:authorUsername, 
+		$query = "UPDATE author SET authorActivationToken = :authorActivationToken, authorUsername =:authorUsername, 
     authorAvatarUrl = :authorAvatarUrl, authorEmail = :authorEmail, authorhash = :authorHash WHERE authorId = :authorID";
 
 		//bind the member variables to the place holders in the template
 
 		$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationToken" => $this->authorActivationToken,
-		"authorUsername" => $this->authorUsername, "authorAvatarUrl" => $this->authorAvatarUrl,
-		"authorEmail" => $this->authorEmail, "authorHash" => $this->authorHash];
+			"authorUsername" => $this->authorUsername, "authorAvatarUrl" => $this->authorAvatarUrl,
+			"authorEmail" => $this->authorEmail, "authorHash" => $this->authorHash];
 
 	}
+
 	/**
 	 * deletes this Author from mySQL
 	 *
@@ -328,6 +328,7 @@ public function insert(\PDO $pdo): void {
 		$statement->excute($parameters);
 
 	}
+
 	/**
 	 * gets the Author by the author ID
 	 *
@@ -339,12 +340,11 @@ public function insert(\PDO $pdo): void {
 	 *
 	 */
 
-	public static function getAuthorbyAuthorId (\PDO $pdo, $authorId) :?Author {
+	public static function getAuthorbyAuthorId(\PDO $pdo, $authorId): ?Author {
 		// sanatize the author id before searching
 		try {
 			$authorId = self::validateUuid($authorId);
-		}
-		catch (\InvalidArgumentException |\RangeException | \Exception | |\TypeError $exception) {
+		} catch(\InvalidArgumentException |\RangeException | \Exception | |\TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
@@ -353,6 +353,67 @@ public function insert(\PDO $pdo): void {
 		FROM profile WHERE authorId = :authorID";
 
 		//bind the author id to the place holder in the template.
+		$parameters = ["authorId" => $authorId->getBytes()];
+		$statement->execute($parameters);
+
+		//grab profile from mySQL
+		try {
+			$author = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+
+				$author = new Author($row["authorId"] . $row[authorActivationToekn],
+					$row[authorAvatarUrl], $row[authorEmail], $row[authorHash], $row[authorUsername]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOExcpetion($exception->getMessage(), 0, $exception));
+		}
+		return ($author);
+	}
+	/**
+	 * gets the Author by Author Username
+	 *
+	 * @param \PDO $pdo PDO connection
+	 * @param string $authorUsername  to search for
+	 * @return \SPLFixedArray of all profiles found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 */
+
+	public static function getAuthorbyAuthorUsername(\PDO, $pdo, string $AuthorUsername) : \SPLFixedArray {
+		//sanatize the at handle before searching
+		$AuthorUsername = trim($suthorUsername);
+		$authorUsername = filter_var($profileAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($profileUsername) === true) {
+			throw(new \PDOException("not a valid Username"));
+		}
+
+		//create query template
+		$query = "SELECT authorId, authorActivationToken, authorUsername, authorAvatarURl, 
+       authorEmail, authorHash FROM profile WHERE profileUsername = :profileAtHanle";
+
+		//bind the profile at handle to the place holder in the template
+		$parameters = ["profileUsername" => $authorUsername];
+		$statement->execute($parameters);
+
+		$profiles = new \SPLFixedArray($statement->rowCount());
+		statements->setFetchMode(\PDO::FETCH_ASSOC);
+
+		while (($row = $statement->()) !==false {
+			try {
+				$author = new Author($row["authorId"], $row["authorActivationToken"], $row[authorAvatarUrl], $row[authorEmail]
+				$row["authorHash"], $row["authorUsername"])
+				$author[$author->key()] = $profile;
+				$profile->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($profiles);
+
 	}
 
 }
