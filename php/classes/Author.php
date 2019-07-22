@@ -239,11 +239,11 @@ class Author implements \JsonSerializable {
 	 * @throws range exception if UserName is more than 32 characters
 	 *
 	 **/
-	public function setAuthorUsername($newAuthorUsername): string {
+	public function setAuthorUsername(string $newAuthorUsername): void {
 		//verify the profile Id is valid
 		$newAuthorUsername = trim($newAuthorUsername);
-		if($newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING));
-		if($newAuthorUsername === false) {
+		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING);
+		if(empty ($newAuthorUsername) === true) {
 			throw (new \InvalidArgumentException("author username is not a valid string"));
 		}
 		//verify the suername will fit in the database
