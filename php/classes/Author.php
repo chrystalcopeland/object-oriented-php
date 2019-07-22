@@ -254,8 +254,105 @@ class Author implements \JsonSerializable {
 	}
 
 	public function jsonSerialize () : array {
-	$fields = get_object_vars($this);
-	$fields ["authorId"] = $this->authorId->toString();
+		$fields = get_object_vars($this);
+		$fields ["authorId"] = $this->authorId->toString();
 
-	return($fields);
-}}
+		return ($fields);
+	}
+/**
+ * Write these in the Author.php file.
+Write and Document an insert statement method
+Write and Document an update statement method
+Write and Document a delete statement method.
+Write and document a getFooByBar method that returns a single object
+Write and document a getFooByBar method that returns a full array
+ */
+
+
+/**
+ * Inserts this Author into mySQL
+ *
+ * @param \PDO $pdo PDO connection object
+ * @throws \PDOException when mySQL related erros occur
+ * @throws \TypeError id $pdo is not a PDO connection object
+ */
+public function insert(\PDO $pdo): void {
+
+	// create query template
+	$query = "INSERT INTO author(authorId, authorAvatarUrl, authorActivationToken, authorEmail, authorHash, authorUsername)
+	VALUES(:authorId, :authorAvatarUrl, :authorActivationToken, :authorEmail, :authorHash, :authorUsername)";
+	$statement = $pdo->prepare($query);
+
+	$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationToken" => $this->authorActivationToken,
+		"authorAvatarUrl" => $this->authorAvatarUrl, "authorEmail" => $this->authorEmail, "authorHash" => $this->authorHash,
+		"authorUsername" => $this->authorUsername];
+}
+
+	/**
+	 * Updates this Author from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection with object
+	 * @throws \PDOException when mySQL related errors occur
+	 *
+	 */
+	public function update(\PDO $pdo): void {
+
+		//create query template
+		$query ="UPDATE author SET authorActivationToken = :authorActivationToken, authorUsername =:authorUsername, 
+    authorAvatarUrl = :authorAvatarUrl, authorEmail = :authorEmail, authorhash = :authorHash WHERE authorId = :authorID";
+
+		//bind the member variables to the place holders in the template
+
+		$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationToken" => $this->authorActivationToken,
+		"authorUsername" => $this->authorUsername, "authorAvatarUrl" => $this->authorAvatarUrl,
+		"authorEmail" => $this->authorEmail, "authorHash" => $this->authorHash];
+
+	}
+	/**
+	 * deletes this Author from mySQL
+	 *
+	 * @param \PDO $pdo PDO connect object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \ TypeError if $pdo is not a PDO connection object
+	 *
+	 */
+
+	public function delete(\PDO $pdo): void {
+
+		//create query template
+		$query = "DELETE FROM author WHERE authorId = :authorId";
+		$statement = $pdo->prepare($query);
+
+		//bind the member variables to the place holders in the template
+		$parameters = ["authorId" => $this->authorId->getBytes()];
+		$statement->excute($parameters);
+
+	}
+	/**
+	 * gets the Author by the author ID
+	 *
+	 * @param \PDO $pdo $pdo PDO connection object
+	 * @param $profileID profile Id to search for (the data type should be mixed/not specified)
+	 * @return Profile|null Profile or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 *
+	 */
+
+	public static function getAuthorbyAuthorId (\PDO $pdo, $authorId) :?Author {
+		// sanatize the author id before searching
+		try {
+			$authorId = self::validateUuid($authorId);
+		}
+		catch (\InvalidArgumentException |\RangeException | \Exception | |\TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		//create query template
+		$query = "SELECT authorId, authorActivationToken, authorAvitarURl, authorEmail, authorHash, authorUsername 
+		FROM profile WHERE authorId = :authorID";
+
+		//bind the author id to the place holder in the template.
+	}
+
+}
