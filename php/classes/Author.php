@@ -383,11 +383,11 @@ class Author implements \JsonSerializable {
 	 * @throws \TypeError when variables are not the correct data type
 	 */
 
-	public static function getAuthorbyAuthorUsername(\PDO, $pdo, string $AuthorUsername) : \SPLFixedArray {
-		//sanatize the at handle before searching
-		$AuthorUsername = trim($suthorUsername);
-		$authorUsername = filter_var($profileAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($profileUsername) === true) {
+	public static function getAuthorByAuthorUsername(\PDO, $pdo, string $AuthorUsername) : \SPLFixedArray {
+		//sanatize the username before searching
+		$authorUsername = trim($authorUsername);
+		$authorUsername = filter_var($authorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($authorUsername) === true) {
 			throw(new \PDOException("not a valid Username"));
 		}
 
@@ -395,15 +395,15 @@ class Author implements \JsonSerializable {
 		$query = "SELECT authorId, authorActivationToken, authorUsername, authorAvatarUrl, 
        authorEmail, authorHash FROM author WHERE authorId = :authorUsername";
 
-		$profiles = new \SPLFixedArray($statement->rowCount());
-		statements->setFetchMode(\PDO::FETCH_ASSOC);
+		$author = new \SPLFixedArray($statement->rowCount());
+		statements;->setFetchMode(\PDO::FETCH_ASSOC);
 
 		while (($row = $statement->()) !==false {
 			try {
-				$author = new Author($row["authorId"], $row["authorActivationToken"], $row[authorAvatarUrl], $row[authorEmail]
+				$author = new Author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"]
 				$row["authorHash"], $row["authorUsername"])
-				$author[$author->key()] = $profile;
-				$profile->next();
+				$author[$author->key()] = $author;
+				$author->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
