@@ -349,8 +349,9 @@ class Author implements \JsonSerializable {
 		}
 
 		//create query template
-		$query = "SELECT authorId, authorActivationToken, authorAvitarURl, authorEmail, authorHash, authorUsername 
-		FROM profile WHERE authorId = :authorID";
+		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername 
+		FROM author WHERE authorId = :authorID";
+		$statement = $pdo->prepare($query);
 
 		//bind the author id to the place holder in the template.
 		$parameters = ["authorId" => $authorId->getBytes()];
@@ -363,8 +364,8 @@ class Author implements \JsonSerializable {
 			$row = $statement->fetch();
 			if($row !== false) {
 
-				$author = new Author($row["authorId"] . $row[authorActivationToekn],
-					$row[authorAvatarUrl], $row[authorEmail], $row[authorHash], $row[authorUsername]);
+				$author = new Author($row["authorId"], $row["authorActivationToken"],
+					$row["authorAvatarUrl"], $row["authorEmail"], $row["authorHash"], $row["authorUsername"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -391,12 +392,8 @@ class Author implements \JsonSerializable {
 		}
 
 		//create query template
-		$query = "SELECT authorId, authorActivationToken, authorUsername, authorAvatarURl, 
-       authorEmail, authorHash FROM profile WHERE profileUsername = :profileAtHanle";
-
-		//bind the profile at handle to the place holder in the template
-		$parameters = ["profileUsername" => $authorUsername];
-		$statement->execute($parameters);
+		$query = "SELECT authorId, authorActivationToken, authorUsername, authorAvatarUrl, 
+       authorEmail, authorHash FROM author WHERE authorId = :authorUsername";
 
 		$profiles = new \SPLFixedArray($statement->rowCount());
 		statements->setFetchMode(\PDO::FETCH_ASSOC);
