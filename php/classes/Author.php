@@ -271,7 +271,7 @@ class Author implements \JsonSerializable {
 	public function insert(\PDO $pdo): void {
 
 		// create query template
-		$query = "INSERT INTO author(authorId, authorAvatarUrl, authorActivationToken, authorEmail, authorHash, authorUsername)
+		$query = "INSERT INTO author(authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername)
 	VALUES(:authorId, :authorAvatarUrl, :authorActivationToken, :authorEmail, :authorHash, :authorUsername)";
 		$statement = $pdo->prepare($query);
 
@@ -289,9 +289,10 @@ class Author implements \JsonSerializable {
 	 */
 	public function update(\PDO $pdo): void {
 
-		//create query template
+		//create query template //
 		$query = "UPDATE author SET authorActivationToken = :authorActivationToken, authorUsername =:authorUsername, 
     authorAvatarUrl = :authorAvatarUrl, authorEmail = :authorEmail, authorhash = :authorHash WHERE authorId = :authorID";
+		$statement = $pdo->prepare($query);
 
 		//bind the member variables to the place holders in the template
 
